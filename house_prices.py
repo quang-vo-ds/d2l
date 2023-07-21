@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import os
-from utils import mylib
+import mylib
 import time
 import torch
 from torch import nn
 from torch.nn import functional as F
 import pandas as pd
-from utils.linear_regression import LinearRegression
+from linear_regression import LinearRegression
+
 
 class KaggleHouse(mylib.DataModule):
     def __init__(self, batch_size, train=None, val=None):
@@ -27,7 +28,7 @@ class KaggleHouse(mylib.DataModule):
         label = 'SalePrice'
         features = pd.concat(
             (self.raw_train.drop(columns=['Id', label]),
-             self.raw_val.drop(columns=['Id'])))
+            self.raw_val.drop(columns=['Id'])))
         # Standardize numerical columns
         numeric_features = features.dtypes[features.dtypes!='object'].index
         features[numeric_features] = features[numeric_features].apply(
@@ -78,7 +79,10 @@ if __name__ == '__main__':
     data.preprocess()
     # print(data.train.shape)
     # print(data.val.shape)
-    
+    # print(data.train)
+    # print(data.train.info())
+    # print(data.val)
+    # print(data.val.info())
     trainer = mylib.Trainer(max_epochs=10)
     models = k_fold(trainer, data, k=5, lr=0.01)
     
